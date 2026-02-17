@@ -225,10 +225,10 @@ struct PackOptions
 	bool createImage = false;
 
 	// Rotate charts to the axis of their convex hull.
-	bool rotateChartsToAxis = true;
+	bool rotateChartsToAxis = false; // POTICO BEGIN - END
 
 	// Rotate charts to improve packing.
-	bool rotateCharts = true;
+	bool rotateCharts = false; // POTICO BEGIN - END
 };
 
 // Call after ComputeCharts. Can be called multiple times to re-pack charts with different options.
