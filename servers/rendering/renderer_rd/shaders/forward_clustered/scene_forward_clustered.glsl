@@ -1822,6 +1822,11 @@ void fragment_shader(in SceneData scene_data) {
 		uvw.xy = uv2 * instances.data[instance_index].lightmap_uv_scale.zw + instances.data[instance_index].lightmap_uv_scale.xy;
 		uvw.z = float(slice);
 
+		// POTICO BEGIN
+		vec2 uv_snap_div = 4.0 * lightmaps.data[ofs].light_texture_size;
+		uvw.xy = floor(uvw.xy * uv_snap_div) / uv_snap_div;
+		// POTICO END
+
 		if (uses_sh) {
 			uvw.z *= 4.0; //SH textures use 4 times more data
 			vec3 lm_light_l0;
@@ -2244,7 +2249,13 @@ void fragment_shader(in SceneData scene_data) {
 			if (shadowmask_mode != LIGHTMAP_SHADOWMASK_MODE_NONE) {
 				const uint slice = instances.data[instance_index].gi_offset >> 16;
 				const vec2 scaled_uv = uv2 * instances.data[instance_index].lightmap_uv_scale.zw + instances.data[instance_index].lightmap_uv_scale.xy;
-				const vec3 uvw = vec3(scaled_uv, float(slice));
+
+				// POTICO BEGIN
+				vec3 uvw = vec3(scaled_uv, float(slice));
+
+				vec2 uv_snap_div = 4.0 * lightmaps.data[ofs].light_texture_size;
+				uvw.xy = floor(uvw.xy * uv_snap_div) / uv_snap_div;
+				// POTICO END
 
 				if (sc_use_lightmap_bicubic_filter()) {
 					shadowmask = textureArray_bicubic(lightmap_textures[MAX_LIGHTMAP_TEXTURES + ofs], uvw, lightmaps.data[ofs].light_texture_size).x;
